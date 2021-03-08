@@ -1,59 +1,65 @@
 import React, {useEffect,useState} from 'react'
 import {Row, Col, List, Avatar} from 'antd';
-import Axios from 'axios';
+import axios from 'axios';
 import SideVideo from './Sections/SideVideo';
-function VideoDetailPage(props) {
-    
+import Subscriber from './Sections/Subscriber';
+
+function VideoPage(props) {
     const videoId = props.match.params.videoid;
-    const variables = { videoId :videoId };
-    const  [VideoDetail, setVideoDetail] = useState([]);
+    const [Video, setVideo] = useState([])
+  
+    const videoVariable = {
+        videoId: videoId
+    }
 
     useEffect(() => {
-        
-        Axios.post('/api/video/getVideoDetail', variables)
+        axios.post('/api/video/getVideo', videoVariable)
             .then(response => {
-                if(response.data.success) {
-                    setVideoDetail(response.data.VideoDetail);
-                }
-                else{
-                    alert("비디오 정보 가져오길 실패");
+                if (response.data.success) {
+                    console.log(response.data.video)
+                    setVideo(response.data.video)
+                } else {
+                    alert('Failed to get video Info')
                 }
             })
-        return () => {
-            
-        }
+
     }, [])
-    if(VideoDetail.writer){
+
+    if (Video.writer) {
         return (
-            <Row gutter = {[16,16]}>
+            <Row>
                 <Col lg={18} xs={24}>
-                <div style={{ width : '100%', padding:'3ream, 4ream'}}>
-                    <video style = {{ width :'100%'}} src={`http://localhost:5000/${VideoDetail.filePath}`}controls/>
-                    <List.Item
-                        actions
-                    >
-                        <List.Item.Meta
-                            avatar={<Avatar src={VideoDetail.writer.image} />}
-                            title={VideoDetail.writer.name}
-                            description={VideoDetail.writer.description}
+                    <div className="postPage" style={{ width: '100%', padding: '3rem 4em' }}>
+                        <video style={{ width: '100%' }} src={`http://localhost:5000/${Video.filePath}`} controls></video>
+
+                        <List.Item
+                            actions={[<Subscriber userTo={Video.writer._id} userFrom={localStorage.getItem('userId')} />]}
+                        >
+                            <List.Item.Meta
+                                avatar={<Avatar src={Video.writer && Video.writer.image} />}
+                                title={<a href="https://ant.design">{Video.title}</a>}
+                                description={Video.description}
                             />
-    
-                    </List.Item>
-                </div>
-    
+                            <div></div>
+                        </List.Item>
+
+                    </div>
                 </Col>
                 <Col lg={6} xs={24}>
+
                     <SideVideo />
 
                 </Col>
-    
             </Row>
         )
-    } else{
-        return(
-            <div>...loading</div>
+
+    } else {
+        return (
+            <div>Loading...</div>
         )
     }
 
+
 }
-export default VideoDetailPage
+
+export default VideoPage
