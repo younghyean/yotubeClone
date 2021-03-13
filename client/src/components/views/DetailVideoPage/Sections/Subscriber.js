@@ -13,7 +13,6 @@ function Subscriber(props) {
                 userTo : userTo,
                 userFrom : userFrom
         }
-
         if(Subscribed) {
             //when we are already subscribed 
             axios.post('/api/subscribe/unSubscribe', subscribeVariables)

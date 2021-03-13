@@ -1,38 +1,33 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaCode } from "react-icons/fa";
-import { Card, Icon, Avatar, Col, Typography, Row} from 'antd';
-import Axios from 'axios';
+import { Card, Avatar, Col, Typography, Row } from 'antd';
+import axios from 'axios';
 import moment from 'moment';
 const { Title } = Typography;
-const { Meta } = Card; 
+const { Meta } = Card;
 
 function SubscriptionPage() {
-    const [Video, setVideo] = useState([])
+  
+    const [Videos, setVideos] = useState([])
+
+    let variable = { userFrom : localStorage.getItem('userId')  }
 
     useEffect(() => {
+        axios.post('/api/video/getSubscriptionVideos', variable)
+            .then(response => {
+                if (response.data.success) {
+                    setVideos(response.data.videos)
+                } else {
+                    alert('Failed to get subscription videos')
+                }
+            })
+    }, [])
 
-        const subscirptionVariables = {
-            userFrom : localStorage.getItem('userId')
+   
+    const renderCards = Videos.map((video, index) => {
 
-        }
-
-        Axios.post('/api/video/getSubscirptionVieos',subscirptionVariables)
-        .then(response => {
-            if(response.data.success){
-                setVideo(response.data.videos);
-            }
-            else{
-                alert('비디오 가져오기 실패')
-            }
-        })
-        return () => {
-            
-        }
-    }, )
-    const renderCards = Video.map((video, index)=>{
-        let minutes = Math.floor(video.duration / 60);
-        let seconds = Math.floor((video.duration - minutes * 60));
-
+        var minutes = Math.floor(video.duration / 60);
+        var seconds = Math.floor(video.duration - minutes * 60);
 
         return <Col lg={6} md={8} xs={24}>
             <div style={{ position: 'relative' }}>
@@ -57,19 +52,20 @@ function SubscriptionPage() {
             <span style={{ marginLeft: '3rem' }}> {video.views}</span>
             - <span> {moment(video.createdAt).format("MMM Do YY")} </span>
         </Col>
+
     })
-
+  
+  
+  
     return (
-        <div style = {{ width : '85%', margin : '3rem auto'}}>
-            <Title level = {2} > Recommended </Title>
-            <hr />
-            <Row gutter={[32, 16]}>
+        <div style={{ width: '85%', margin: '3rem auto' }}>
+        <Title level={2} > Subscribed Videos </Title>
+        <hr />
 
+        <Row gutter={16}>
             {renderCards}
-               
-            </Row>
-
-        </div>
+        </Row>
+    </div>
     )
 }
 
