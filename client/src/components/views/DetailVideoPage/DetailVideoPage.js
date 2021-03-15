@@ -4,7 +4,7 @@ import axios from 'axios';
 import SideVideo from './Sections/SideVideo';
 import Subscriber from './Sections/Subscriber';
 import Comments from './Sections/Comments';
-//import LikeDislikes from './Sections/LikeDislikes';
+import LikeDislikes from './Sections/LikeDislike';
 function DetailVideoPage(props) {
 
 
@@ -47,13 +47,13 @@ function DetailVideoPage(props) {
 
     if (Video.writer) {
         return (
-            <Row>
+            <Row gutter = {[16,16]}>
                 <Col lg={18} xs={24}>
                     <div className="postPage" style={{ width: '100%', padding: '3rem 4em' }}>
                         <video style={{ width: '100%' }} src={`http://localhost:5000/${Video.filePath}`} controls></video>
 
                         <List.Item
-                            actions={[ <Subscriber userTo={Video.writer._id} userFrom={localStorage.getItem('userId')} />]}
+                            actions={[ <LikeDislikes video userId = {localStorage.getItem('userId')} videoId = {videoId} />, <Subscriber userTo={Video.writer._id} userFrom={localStorage.getItem('userId')} />]}
                         >
                             <List.Item.Meta
                                 avatar={<Avatar src={Video.writer && Video.writer.image} />}

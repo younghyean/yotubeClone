@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Comment, Avatar, Button, Input } from 'antd';
 import Axios from 'axios';
 import { useSelector } from 'react-redux';
-//import LikeDislikes from './LikeDislikes';
+import LikeDislikes from './LikeDislike';
 const { TextArea } = Input;
 function SingleComment(props) {
     const user = useSelector(state => state.user);
@@ -41,7 +41,7 @@ function SingleComment(props) {
     }
 
     const actions = [
-      //  <LikeDislikes comment commentId={props.comment._id} userId={localStorage.getItem('userId')} />,
+        <LikeDislikes comment commentId={props.comment._id} userId={localStorage.getItem('userId')} />,
         <span onClick={openReply} key="comment-basic-reply-to">Reply to </span>
     ]
 
